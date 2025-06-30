@@ -22,8 +22,19 @@ public class DriverController : ControllerBase
     }
 
     [HttpGet]
-    public List<Driver> GetDrivers()
+    public IEnumerable<Driver> GetDrivers()
     {
         return drivers;
+    }
+
+    [HttpGet("{name}")]
+    public ActionResult<Driver> GetDriver(string name)
+    {
+        var driver = drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (driver == null)
+        {
+            return NotFound();
+        }
+        return Ok(driver);
     }
 }
