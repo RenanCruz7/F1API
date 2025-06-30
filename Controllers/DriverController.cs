@@ -20,4 +20,10 @@ public class DriverController : ControllerBase
         Console.WriteLine(driver.name);
         Console.WriteLine(driver.team);
     }
+
+    [HttpGet]
+    public List<Driver> GetDrivers()
+    {
+        return drivers;
+    }
 }
