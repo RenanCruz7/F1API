@@ -15,12 +15,11 @@ public class DriverController : ControllerBase
     private static int id = 4;
 
     [HttpPost]
-    public void AddDriver([FromBody]Driver driver)
+    public ActionResult AddDriver([FromBody]Driver driver)
     {
         driver.Id = id++;
         drivers.Add(driver);
-        Console.WriteLine(driver.name);
-        Console.WriteLine(driver.team);
+        return CreatedAtAction(nameof(GetDriverById), new { Id = driver.Id }, driver);
     }
 
     [HttpGet]
