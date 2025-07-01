@@ -6,13 +6,13 @@ namespace F1API.Controllers;
 [Route("[controller]")]
 public class DriverController : ControllerBase
 {
-    private List<Driver> drivers = new List<Driver>
+    private static List<Driver> drivers = new List<Driver>
     {
         new Driver {Id = 1, name = "Lewis Hamilton", team = "Mercedes", wins = 100, podiums = 200 },
         new Driver {Id = 2, name = "Max Verstappen", team = "Red Bull Racing", wins = 64, podiums = 100 },
         new Driver {Id = 3, name = "Charles Leclerc", team = "Ferrari", wins = 50, podiums = 50}
     };
-    private static int id = 0;
+    private static int id = 4;
 
     [HttpPost]
     public void AddDriver([FromBody]Driver driver)
@@ -24,9 +24,9 @@ public class DriverController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Driver> GetDrivers()
+    public IEnumerable<Driver> GetDrivers([FromQuery] int skip=0, [FromQuery] int take = 50)
     {
-        return drivers;
+        return drivers.Skip(skip).Take(take);
     }
 
     [HttpGet("name/{name}")]
