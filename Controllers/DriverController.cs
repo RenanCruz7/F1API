@@ -8,14 +8,16 @@ public class DriverController : ControllerBase
 {
     private List<Driver> drivers = new List<Driver>
     {
-        new Driver {name = "Lewis Hamilton", team = "Mercedes", wins = 100, podiums = 200 },
-        new Driver {name = "Max Verstappen", team = "Red Bull Racing", wins = 64, podiums = 100 },
-        new Driver {name = "Charles Leclerc", team = "Ferrari", wins = 50, podiums = 50}
+        new Driver {Id = 1, name = "Lewis Hamilton", team = "Mercedes", wins = 100, podiums = 200 },
+        new Driver {Id = 2, name = "Max Verstappen", team = "Red Bull Racing", wins = 64, podiums = 100 },
+        new Driver {Id = 3, name = "Charles Leclerc", team = "Ferrari", wins = 50, podiums = 50}
     };
+    private static int id = 0;
 
     [HttpPost]
     public void AddDriver([FromBody]Driver driver)
     {
+        driver.Id = id++;
         drivers.Add(driver);
         Console.WriteLine(driver.name);
         Console.WriteLine(driver.team);
@@ -27,10 +29,21 @@ public class DriverController : ControllerBase
         return drivers;
     }
 
-    [HttpGet("{name}")]
+    [HttpGet("name/{name}")]
     public ActionResult<Driver> GetDriver(string name)
     {
         var driver = drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (driver == null)
+        {
+            return NotFound();
+        }
+        return Ok(driver);
+    }
+
+    [HttpGet("id/{Id}")]
+    public ActionResult<Driver> GetDriverById(int Id)
+    {
+        var driver = drivers.FirstOrDefault(d => d.Id == Id);
         if (driver == null)
         {
             return NotFound();
