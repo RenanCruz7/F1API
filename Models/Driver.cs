@@ -4,6 +4,7 @@ namespace F1API.Models;
 public class Driver
 {
     [Key]
+    [Required]
     public int Id { get; set; } // Assuming you have an ID for each driver, even if not used in the example
     [Required(ErrorMessage="O nome do piloto é obrigatorio")]
     [StringLength(100, ErrorMessage = "O nome do piloto deve ter no máximo 100 caracteres")]
