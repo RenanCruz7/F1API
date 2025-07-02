@@ -1,4 +1,5 @@
-﻿using F1API.Models;
+﻿using F1API.Data;
+using F1API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace F1API.Controllers;
@@ -6,13 +7,12 @@ namespace F1API.Controllers;
 [Route("[controller]")]
 public class DriverController : ControllerBase
 {
-    private static List<Driver> drivers = new List<Driver>
+    private DriverContext _context;
+
+    public DriverController(DriverContext context)
     {
-        new Driver {Id = 1, name = "Lewis Hamilton", team = "Mercedes", wins = 100, podiums = 200 },
-        new Driver {Id = 2, name = "Max Verstappen", team = "Red Bull Racing", wins = 64, podiums = 100 },
-        new Driver {Id = 3, name = "Charles Leclerc", team = "Ferrari", wins = 50, podiums = 50}
-    };
-    private static int id = 4;
+        _context = context;
+    }
 
     [HttpPost]
     public ActionResult AddDriver([FromBody]Driver driver)
