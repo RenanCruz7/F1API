@@ -1,4 +1,6 @@
-﻿using F1API.Data;
+﻿using AutoMapper;
+using F1API.Data;
+using F1API.Data.Dtos;
 using F1API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,15 +10,18 @@ namespace F1API.Controllers;
 public class DriverController : ControllerBase
 {
     private DriverContext _context;
+    private IMapper _mapper;
 
-    public DriverController(DriverContext context)
+    public DriverController(DriverContext context,IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public ActionResult AddDriver([FromBody]Driver driver)
-    {
+    public ActionResult AddDriver([FromBody]CreateDriverDto driverdto)
+    {   
+        Driver driver = _mapper.Map<Driver>(driverdto);
         _context.Drivers.Add(driver);
         _context.SaveChanges();
         return CreatedAtAction(nameof(GetDriverById), new { Id = driver.Id }, driver);
