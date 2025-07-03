@@ -17,21 +17,21 @@ public class DriverController : ControllerBase
     [HttpPost]
     public ActionResult AddDriver([FromBody]Driver driver)
     {
-        driver.Id = id++;
-        drivers.Add(driver);
+        _context.Drivers.Add(driver);
+        _context.SaveChanges();
         return CreatedAtAction(nameof(GetDriverById), new { Id = driver.Id }, driver);
     }
 
     [HttpGet]
     public IEnumerable<Driver> GetDrivers([FromQuery] int skip=0, [FromQuery] int take = 50)
     {
-        return drivers.Skip(skip).Take(take);
+        return _context.Drivers.Skip(skip).Take(take);
     }
 
     [HttpGet("name/{name}")]
     public ActionResult<Driver> GetDriver(string name)
     {
-        var driver = drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
+        var driver = _context.Drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
         if (driver == null)
         {
             return NotFound();
@@ -42,7 +42,7 @@ public class DriverController : ControllerBase
     [HttpGet("id/{Id}")]
     public ActionResult<Driver> GetDriverById(int Id)
     {
-        var driver = drivers.FirstOrDefault(d => d.Id == Id);
+        var driver = _context.Drivers.FirstOrDefault(d => d.Id == Id);
         if (driver == null)
         {
             return NotFound();
