@@ -8,5 +8,7 @@ namespace F1API.Profiles;
         public DriverProfile()
         {
             CreateMap<CreateDriverDto, Driver>();
+            CreateMap<Driver, ReadDriverDto>();
+            CreateMap<UpdateDriverDto, Driver>();
         }
     }

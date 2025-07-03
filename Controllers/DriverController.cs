@@ -27,31 +27,49 @@ public class DriverController : ControllerBase
         return CreatedAtAction(nameof(GetDriverById), new { Id = driver.Id }, driver);
     }
 
-    [HttpGet]
-    public IEnumerable<Driver> GetDrivers([FromQuery] int skip=0, [FromQuery] int take = 50)
-    {
-        return _context.Drivers.Skip(skip).Take(take);
-    }
-
-    [HttpGet("name/{name}")]
-    public ActionResult<Driver> GetDriver(string name)
-    {
-        var driver = _context.Drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
-        if (driver == null)
-        {
-            return NotFound();
-        }
-        return Ok(driver);
-    }
-
-    [HttpGet("id/{Id}")]
-    public ActionResult<Driver> GetDriverById(int Id)
+    [HttpPut("{Id}")]
+    public ActionResult UpdateDriver(int Id, [FromBody] UpdateDriverDto driverdto)
     {
         var driver = _context.Drivers.FirstOrDefault(d => d.Id == Id);
         if (driver == null)
         {
             return NotFound();
         }
-        return Ok(driver);
+        _mapper.Map(driverdto, driver);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
+
+
+
+    [HttpGet]
+    public IEnumerable<ReadDriverDto> GetDrivers([FromQuery] int skip=0, [FromQuery] int take = 50)
+    {
+        return _mapper.Map<List<ReadDriverDto>>(_context.Drivers.Skip(skip).Take(take));
+    }
+
+    [HttpGet("name/{name}")]
+    public ActionResult<ReadDriverDto> GetDriver(string name)
+    {
+        var driver = _context.Drivers.FirstOrDefault(d => d.name.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (driver == null)
+        {
+            return NotFound();
+        }
+        var driverDto = _mapper.Map<ReadDriverDto>(driver);
+        return Ok(driverDto);
+    }
+
+    [HttpGet("id/{Id}")]
+    public ActionResult<ReadDriverDto> GetDriverById(int Id)
+    {
+        var driver = _context.Drivers.FirstOrDefault(d => d.Id == Id);
+        if (driver == null)
+        {
+            return NotFound();
+        }
+        var driverDto = _mapper.Map<ReadDriverDto>(driver);
+        return Ok(driverDto);
     }
 }
